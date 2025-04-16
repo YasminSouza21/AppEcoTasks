@@ -1,6 +1,6 @@
 package com.app.todoappecotasks
 
-import androidx.compose.foundation.background
+    import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -35,7 +35,7 @@ import java.util.Locale
 @Composable
 fun TodoListPage(viewmodel : TodoViewModel){
 
-    val todoList by viewmodel.todoList.observeAsState()
+    val todoList by viewmodel.todoList.observeAsState(initial = emptyList())
     var inputText by remember {
         mutableStateOf("")
     }
