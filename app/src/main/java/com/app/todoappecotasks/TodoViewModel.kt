@@ -1,24 +1,27 @@
 package com.app.todoappecotasks
 
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import java.time.Instant
+import java.util.Date
 
 class TodoViewModel : ViewModel() {
-    private var _todolist = MutableLiveData<List<Todo>>()
-    val todoList : LiveData<List<Todo>> = _todolist
 
-    fun getAllTodo() {
-        _todolist.value = TodoManager.getAllTodo()
-    }
+    val todoDao = MainApplication.todoDatabase.getTodoDao()
+    val todoList : LiveData<List<Todo>> = todoDao.getAllTodo()
 
-    fun addTodo(title : String){
-        TodoManager.addTodo(title)
-        getAllTodo()
+    fun addTodo(title : String) {
+        viewModelScope.launch(Dispatchers.IO){
+            todoDao.addTodo(Todo(title = title, createdAt = Date.from(Instant.now())))
+        }
     }
 
     fun deleteTodo(id: Int){
-        TodoManager.deleteTodo(id)
-        getAllTodo()
+        viewModelScope.launch(Dispatchers.IO){
+            todoDao.deleteTodo(id)
+        }
     }
 }
